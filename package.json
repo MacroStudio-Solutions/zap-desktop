@@ -1,0 +1,23 @@
+{
+  "name": "zap-desktop",
+  "version": "1.0.0",
+  "description": "Zap Desktop App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MacroStudio-Solutions/zap-desktop.git"
+  },
+  "author": "MacroStudio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MacroStudio-Solutions/zap-desktop/issues"
+  },
+  "homepage": "https://github.com/MacroStudio-Solutions/zap-desktop#readme",
+  "devDependencies": {
+    "electron": "^18.1.0"
+  }
+}
