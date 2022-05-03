@@ -1,44 +1,63 @@
-import { app, BrowserWindow, Menu } from "electron";
+const { app, BrowserWindow, Menu, screen } = require("electron");
+const port = process.env.PORT || 3000;
+const { server, setWindow } = require("./src/Controllers/Server")
 
+function createWindow() {
 
-  
+  const {width, height} = screen.getPrimaryDisplay().workAreaSize
 
-function createWindow () {
-
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-      width: 800,
-      height: 600,
-      // icon: path.join(__dirname, 'icon.ico'),
-    //   webPreferences: {
-    //     preload: path.join(__dirname, 'preload.js')
-    //   }
-    })
-  
-    // and load the index.html of the app.
-    mainWindow.loadURL('http://localhost:3000')
-  
-    // Open the DevTools.
-    //mainWindow.webContents.openDevTools()
-  
-    server.setWindowRef(mainWindow);
-  }
-  
-  app.whenReady().then(() => {
-    createWindow()
-  
-    app.on('activate', function () {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
+  loadWindow = new BrowserWindow({
+    width: 250,
+    height: 300,
+    center: true,
+    show: false,
+    titleBarStyle: "hidden",
+    roundedCorners: true,
+    transparent: true,
+    icon: "./src/assets/icon-256x256.png"
   })
-  
-  
-  // Quit when all windows are closed, except on macOS. There, it's common
-  // for applications and their menu bar to stay active until the user quits
-  // explicitly with Cmd + Q.
-  app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') app.quit()
+
+  loadWindow.loadFile("./src/Viewers/Loader/index.html");
+
+  loadWindow.once('ready-to-show', () => {
+    loadWindow.show();
   })
+
+  mainWindow = new BrowserWindow({
+    width: width,
+    height: height,
+    show: false,
+    center: true,
+    maximizable: true,
+    icon: "./src/assets/icon-256x256.png"
+  })
+
+  mainWindow.loadURL('http://localhost:5005/minhaconta')
+
+  Menu.setApplicationMenu(null);
   
+  setWindow.window = mainWindow;
+  
+  mainWindow.once('ready-to-show', () => {
+    loadWindow.close();
+    mainWindow.maximize();
+    mainWindow.show();
+    mainWindow.focus();
+  })
+
+  server.listen(port, () => {
+    console.log(`Process listen in http://localhost:${port}`);
+  });
+}
+
+app.whenReady().then(() => {
+  createWindow()
+
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+})
+
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
+})
