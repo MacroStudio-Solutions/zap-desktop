@@ -53,10 +53,25 @@ function createWindow() {
   })
 
   server.listen(port, () => {
+    const fs = require("fs");
+
+    let pathInputTmp = "./src/tmp/";
+
+    fs.unlink(pathInputTmp, (err) => {
+      if (err) {
+          console.log(err);
+      } else {
+          console.log("Arquivos temporários foram deletados com sucesso!");
+      }
+    });
+
+    function generateID(){
+
+    }
 
     // TODO:
     //
-    // 🚀 Apagar tmp dir
+    // 🚀 Apagar tmp dir X
     // 🚀 Gerar id da janela
     // 🚀 Não pode ter dois servidores do Zap na mesma rede
     // 🚀 informar ao backend (via POST) qual a porta do servidor, uuid, status      
