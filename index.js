@@ -54,7 +54,7 @@ function createWindow() {
 
   server.listen(port, () => {
     const fs = require("fs");
-
+    const {v4: uuidv4} = require('uuid');
     let pathInputTmp = "./src/tmp/";
 
     fs.unlink(pathInputTmp, (err) => {
@@ -65,14 +65,14 @@ function createWindow() {
       }
     });
 
-    function generateID(){
+    let uuid = uuidv4();
 
-    }
 
+   
     // TODO:
     //
     // 🚀 Apagar tmp dir X
-    // 🚀 Gerar id da janela
+    // 🚀 Gerar id da janela X
     // 🚀 Não pode ter dois servidores do Zap na mesma rede
     // 🚀 informar ao backend (via POST) qual a porta do servidor, uuid, status      
     //     ... somente se a janela principal estiver carregada
