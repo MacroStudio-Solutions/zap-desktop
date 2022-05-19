@@ -10,6 +10,7 @@ const Server = (app) => {
 
     app.get("/get-printers", async (req, res) => {
         const printers = await req.window.webContents.getPrintersAsync();
+        console.log(printers)
         res.status(200).send(printers)
     })
 
@@ -28,7 +29,7 @@ const Server = (app) => {
 
             let pathToOrder = `src/tmp/print-order-${bodyContent.order.id}.`;
 
-            const orderPlainText = TextReceiptRender(bodyContent.order, bodyContent.type);
+            const orderPlainText = TextReceiptRender(bodyContentorder, bodyContent.type);
 
             if (bodyContent.format == "text") {
                 pathToOrder += "txt"
