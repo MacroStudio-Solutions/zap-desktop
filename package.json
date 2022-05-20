@@ -24,6 +24,7 @@
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "express": "^4.18.0",
+    "freeport": "^1.0.5",
     "ip": "^1.1.8",
     "node-delete": "^0.1.2",
     "node-fetch": "^3.2.4",

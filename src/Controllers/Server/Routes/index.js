@@ -15,7 +15,6 @@ const Server = (app) => {
     })
 
     app.get("/app-zap-running", (req, res) => {
-
         res.status(200).send({status:true}).send();
     });
 

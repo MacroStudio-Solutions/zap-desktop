@@ -1,13 +1,32 @@
 const { app, BrowserWindow, Menu, screen } = require("electron");
-const port = process.env.PORT || 3000;
+
 const { server, setWindow } = require("./src/Controllers/Server");
 const { v4: uuidv4 } = require("uuid");
 const ip = require("ip");
-const axios = require("axios").default;
-const del = require("node-delete");
+
+const { useCheckServer } = require("./src/hooks/useCheckServer");
+const { useCleanCache } = require("./src/hooks/useCleanCache");
+
+const { useFreePort } = require("./src/hooks/useFreePort");
+
+// TODO:
+// somente gerar porta livre
+// problema 
+
+// useFreePort().then(res => {
+//   console.log("New port >", res)
+// });
+
+
+const port = 3000;
 
 function createWindow() {
+
+  //const port = await useFreePort();
+
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const uuid = uuidv4();
+  const localIP = ip.address();
 
   loadWindow = new BrowserWindow({
     width: 250,
@@ -26,9 +45,6 @@ function createWindow() {
     loadWindow.show();
   });
 
-  // TODO:
-  // gerar id da janela
-
   mainWindow = new BrowserWindow({
     width: width,
     height: height,
@@ -43,6 +59,7 @@ function createWindow() {
   Menu.setApplicationMenu(null);
 
   setWindow.window = mainWindow;
+  setWindow.window = uuid;
 
   mainWindow.once("ready-to-show", () => {
     loadWindow.close();
@@ -50,50 +67,28 @@ function createWindow() {
     mainWindow.show();
     mainWindow.focus();
 
-    axios
-      .get("http://localhost:3000/app-zap-running")
-      .then(function (data) {
-        if (data == true) {
-          console.log(`Servidor já foi iniciado na porta: ${port}`);
-        } else {
-          server.listen(port, () => {
-            //imports para os pacotes
+    if (!useCheckServer(port)) {
 
-            // variável contendo o id da requisição
-            let uuid = uuidv4();
+      // Retorna true se não houver outra instância do server no localhost
+      // porém, o app não sabe qual a porta foi utilizada
 
-            //função para deletar os arquivos na pasta ''tmp''
-            del(["./src/tmp/*"], function (err, paths) {});
+      server.listen(port, async () => {
 
-            // variável contendo o localIP do computador que fez a requisição
-            let localIP = ip.address();
-            //requisição do tipo Post com Axios para passar os parametros para a API
-            axios
-              .post("https://zapdelivery.me/minhaconta/setserver", {
-                ip: localIP,
-                port: port,
-                running: true,
-                windowKey: uuid,
-              })
-              .then(function (response) {
-                console.log(response);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-            //informar o DOM o ID da janela
-            mainWindow.webContents
-              .executeJavaScript(`setUUIDWindowApp(${uuid})`)
-              .catch((e) => {
-                console.log("tente novamente");
-              });
+        useSetServer(localIP, port, uuid);
+
+        //informar o DOM o ID da janela
+        mainWindow.webContents
+          .executeJavaScript(`setUUIDWindowApp(${uuid})`)
+          .catch((e) => {
+            console.log("tente novamente");
           });
-          console.log(`Process listen in http://localhost:${port}`);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
+
       });
+      console.log(`Process listen in http://localhost:${port}`);
+
+    }
+
+
     // TODO:
     //
     // 🚀 Apagar tmp dir X
@@ -125,7 +120,8 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  // clean tmp
+
+  useCleanCache();
   createWindow();
 
   app.on("activate", function () {

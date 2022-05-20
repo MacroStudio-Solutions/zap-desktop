@@ -12,11 +12,14 @@ server.use(cors());
 server.use(express.json());
 
 const setWindow = {
-    window: null
+    window: null,
+    id: ""
 }
 
 server.use((req, res, next) => {
     req.window = setWindow.window;
+    req.id = setWindow.id;
+    
     next();
 });
 
