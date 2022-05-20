@@ -54,7 +54,7 @@ function createWindow() {
       .get("http://localhost:3000/app-zap-running")
       .then(function (data) {
         if (data == true) {
-          console.log("Servidor já está usando nesta porta");
+          console.log(`Servidor já foi iniciado na porta: ${port}`);
         } else {
           server.listen(port, () => {
             //imports para os pacotes
