@@ -14,6 +14,11 @@ const Server = (app) => {
         res.status(200).send(printers)
     })
 
+    app.get("/app-zap-running", (req, res) => {
+
+        res.status(200).send({status:true}).send();
+    });
+
     app.post("/print", async (req, res) => {
 
         const bodyContent = req.body;
