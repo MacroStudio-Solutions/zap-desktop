@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Menu, screen } = require("electron");
 const port = process.env.PORT || 3000;
+const port2 = process.env.PORT || 9000;
 const { server, setWindow } = require("./src/Controllers/Server")
 
 function createWindow() {
@@ -48,39 +49,70 @@ function createWindow() {
     mainWindow.show();
     mainWindow.focus();
 
-    // TODO: 
-    // startServer()
-  })
-
-  server.listen(port, () => {
+  server.listen(port2, () => {
     const fs = require("fs");
-    const {v4: uuidv4} = require('uuid');
-    let pathInputTmp = "./src/tmp/";
+    const { v4: uuidv4 } = require("uuid");
 
-    fs.unlink(pathInputTmp, (err) => {
-      if (err) {
+    if (port === port2) {
+      console.log(
+        `A porta: ${port} é igual a porta: ${port2} verifique a porta do servidor`
+      );
+    } else {
+      let pathInputTmp = "./src/tmp/";
+
+      fs.unlink(pathInputTmp, (err) => {
+        if (err) {
           console.log(err);
-      } else {
+        } else {
           console.log("Arquivos temporários foram deletados com sucesso!");
-      }
-    });
+        }
+      });
 
-    let uuid = uuidv4();
+      let uuid = uuidv4();
+      mainWindow.windowContent
+        .executeJavascript(`setUUIDWindowApp(${uuid})`)
+        .catch.catch((error) => {
+          console.error("Tente novamente: ", error);
+        });
 
+      const ip = require("ip");
+      let localIP = ip.address();
 
-   
+      const server = {
+        ip: localIP,
+        port: port2,
+        running: true,
+        windowKey: uuid,
+      };
+
+      fetch("https://zapdelivery.me/minhaconta/setserver", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(server),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Sucesso:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", data);
+        });
+    }
+  });
     // TODO:
     //
     // 🚀 Apagar tmp dir X
     // 🚀 Gerar id da janela X
-    // 🚀 Não pode ter dois servidores do Zap na mesma rede
+    // 🚀 Não pode ter dois servidores do Zap na mesma rede X
     // 🚀 informar ao backend (via POST) qual a porta do servidor, uuid, status      
-    //     ... somente se a janela principal estiver carregada
+    //     ... somente se a janela principal estiver carregada X
 
-    // fetch/axios https://zapdelivery.me/minhaconta/setserver (Example endpoint)
+    // fetch/axios https://zapdelivery.me/minhaconta/setserver (Example endpoint)X
     // Authentication: ???
 
-    // POST DATA
+    // POST DATA X
     // server: {
     //   ip: localIP
     //   port: port,
@@ -97,7 +129,7 @@ function createWindow() {
     // 🚀 Validar boas práticas da build (ex: configs de icones e etc)
     // 🚀 Gerar instalador (MSI)
 
-    console.log(`Process listen in http://localhost:${port}`);
+    console.log(`Process listen in http://localhost:${port2}`);
   });
 }
 
