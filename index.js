@@ -50,26 +50,22 @@ function createWindow() {
     mainWindow.focus();
 
   server.listen(port2, () => {
-    const fs = require("fs");
+    
     const { v4: uuidv4 } = require("uuid");
     const ip = require("ip");
     const axios = require('axios').default;
+    const del = require('node-delete');
 
     if (port === port2) {
       console.log(
         `A porta: ${port} é igual a porta: ${port2} verifique a porta do servidor`
       );
     } else {
-      let pathInputTmp = "./src/tmp/";
 
-      fs.unlink(pathInputTmp, (err) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Arquivos temporários foram deletados com sucesso!");
-        }
-      });
-
+   
+    let pathInputTmp = "./src/tmp/";
+     del(['./src/tmp/*'], function (err, paths) {});
+      
       let uuid = uuidv4();
       let localIP = ip.address();
         axios.post("https://zapdelivery.me/minhaconta/setserver", {
