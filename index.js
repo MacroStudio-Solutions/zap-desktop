@@ -80,7 +80,7 @@ function createWindow() {
         mainWindow.webContents
           .executeJavaScript(`setUUIDWindowApp(${uuid})`)
           .catch((e) => {
-            console.log("tente novamente");
+            console.log("try again");
           });
 
       });
