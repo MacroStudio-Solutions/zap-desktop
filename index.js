@@ -52,6 +52,8 @@ function createWindow() {
   server.listen(port2, () => {
     const fs = require("fs");
     const { v4: uuidv4 } = require("uuid");
+    const ip = require("ip");
+    const axios = require('axios').default;
 
     if (port === port2) {
       console.log(
@@ -69,35 +71,18 @@ function createWindow() {
       });
 
       let uuid = uuidv4();
-      mainWindow.windowContent
-        .executeJavascript(`setUUIDWindowApp(${uuid})`)
-        .catch.catch((error) => {
-          console.error("Tente novamente: ", error);
-        });
-
-      const ip = require("ip");
       let localIP = ip.address();
-
-      const server = {
-        ip: localIP,
-        port: port2,
-        running: true,
-        windowKey: uuid,
-      };
-
-      fetch("https://zapdelivery.me/minhaconta/setserver", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(server),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Sucesso:", data);
+        axios.post("https://zapdelivery.me/minhaconta/setserver", {
+          ip: localIP,
+          port: port2,
+          running: true,
+          windowKey: uuid,
         })
-        .catch((error) => {
-          console.error("Error:", data);
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
         });
     }
   });
@@ -121,7 +106,7 @@ function createWindow() {
     // }
 
     // Após janela carregada
-    // 🚀 informar ao DOM a UUID da janela
+    // 🚀 informar ao DOM a UUID da janelax
     // Example:
     // mainWindow.windowContent.executeJavascript(`setUUIDWindowApp(${"D54G6ED54G6E54"})`).catch(e => { // tentar novamente })
 
