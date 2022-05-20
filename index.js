@@ -82,10 +82,9 @@ function createWindow() {
           .catch((e) => {
             console.log("try again");
           });
-
+         
       });
       console.log(`Process listen in http://localhost:${port}`);
-
     }
 
 
@@ -113,7 +112,7 @@ function createWindow() {
     // Example:
     //
 
-    // 🚀 Buildar o APP (electron-builder)
+    // 🚀 Buildar o APP (electron-builder)X
     // 🚀 Validar boas práticas da build (ex: configs de icones e etc)
     // 🚀 Gerar instalador (MSI)
   });
