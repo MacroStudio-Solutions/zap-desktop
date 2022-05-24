@@ -9,7 +9,6 @@ const useCheckServer = async (port) => {
     if (resCheck && resCheck.status === 200) return false;
     
     return true;
-
 }
 
 module.exports = { useCheckServer };

@@ -67,25 +67,25 @@ function createWindow() {
     mainWindow.show();
     mainWindow.focus();
 
-    if (!useCheckServer(port)) {
+    //if (!useCheckServer(port)) {
 
       // Retorna true se não houver outra instância do server no localhost
       // porém, o app não sabe qual a porta foi utilizada
 
       server.listen(port, async () => {
 
-        useSetServer(localIP, port, uuid);
+        // useSetServer(localIP, port, uuid);
 
-        //informar o DOM o ID da janela
-        mainWindow.webContents
-          .executeJavaScript(`setUUIDWindowApp(${uuid})`)
-          .catch((e) => {
-            console.log("try again");
-          });
+        // //informar o DOM o ID da janela
+        // mainWindow.webContents
+        //   .executeJavaScript(`setUUIDWindowApp(${uuid})`)
+        //   .catch((e) => {
+        //     console.log("try again");
+        //   });
          
+        console.log(`Process listen in http://localhost:${port}`);
       });
-      console.log(`Process listen in http://localhost:${port}`);
-    }
+    //}
 
 
     // TODO:
