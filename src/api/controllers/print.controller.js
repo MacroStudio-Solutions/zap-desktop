@@ -61,20 +61,7 @@ exports.print = (req, res) => {
 
         printWindow.webContents.on('did-finish-load', () => {
 
-            const options = {
-                silent: true,
-                deviceName: bodyContent.deviceName,
-                margins: {
-                    marginType: "custom",
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                }
-                
-            }
-
-            printWindow.webContents.print(options, (success, errorType) => {
+            printWindow.webContents.print(bodyContent.options, (success, errorType) => {
                 if (success) {
                     res.status(200).send({ status: success })
                 } else {
