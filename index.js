@@ -40,8 +40,7 @@ function createWindow() {
     }
   });
 
-  //mainWindow.loadURL("https://zapdelivery.me/minhaconta");
-  mainWindow.loadURL("http://localhost:5005/minhaconta");
+  mainWindow.loadURL("https://zapdelivery.me/minhaconta");
   
   Menu.setApplicationMenu(null);
 

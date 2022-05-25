@@ -2,8 +2,7 @@ const axios = require("axios").default;
 const MAX_TRIES = 10;
 
 const useSetServer = async (config, tryCounter = 1) => {
-    //const setServer = await axios.post("https://api.zapdelivery.me/local/setserver", 
-    const setServer = await axios.post("http://localhost:5005/local/setserver", config, 
+    const setServer = await axios.post("https://zapdelivery.me/local/setserver", config, 
     {
         headers: {
             Authorization: "87rt321n321w65r4w65r4h76ykj6354s35E4G36R5H4DF6435"
