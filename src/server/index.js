@@ -1,28 +1,22 @@
 const express = require("express");
 const cors = require("cors");
+
 const server = express();
-
-const index = require("./Routes");
-
-// const corsOptions = {
-//     origin: ["*"],
-// };
-
 server.use(cors());
 server.use(express.json());
 
 const setWindow = {
     window: null,
-    id: ""
+    key: ""
 }
 
 server.use((req, res, next) => {
     req.window = setWindow.window;
-    req.id = setWindow.id;
-    
+    req.key = setWindow.key;
     next();
 });
 
-index(server);
+const routes = require('../api/routes/')
+server.use('/', routes)
 
 module.exports = { server, setWindow };

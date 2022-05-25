@@ -138,17 +138,6 @@ module.exports = (order, type) => {
                 }
             }
 
-
-            // if (order.fee.price === 0) {
-            //   //if (order.method.data.outside) {
-            //   //   feeRow = "Taxa a combinar";
-            //   // } else {
-            //     feeRow = "Entrega GRÁTIS";
-            //   // }
-            // } else {
-            //   feeRow = "Taxa de entrega: " + Number(order.fee.price).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
-            // }
-
             if (order.method.data.formatted) {
                 text += `Entrega: \n${delimitName(order.method.data.formatted)}\nNumero: ${order.method.data.number}`;
             } else {
@@ -191,8 +180,6 @@ module.exports = (order, type) => {
 
     const total = Number(order.totalCart).toLocaleString("pt-BR", opts);
 
-    // iniciar o calculo de tempo obs: date é uma var temporaria
-
     let orderDate = 0;
 
     if (order.timestamp.seconds) {
@@ -212,7 +199,6 @@ module.exports = (order, type) => {
     day = date.getDate();
     month = date.getMonth() + 1;
 
-    // acrescenta zero aos valores menor que 10
     if (hours < 10) {
         hours = "0" + hours;
     }
@@ -226,10 +212,6 @@ module.exports = (order, type) => {
         month = "0" + month;
     }
 
-
-    // AQUI FAZ O LOOP NOS ITENS
-
-    //Object.keys(order.itens).forEach((item) => {
     order.itens.forEach((item) => {
 
         itensReceipt += "====================================\n" +
@@ -368,7 +350,6 @@ module.exports = (order, type) => {
             paymentType += "\n------------------------------------\n";
 
         })
-
     }
 
     let totalPaymentGroup = "";
@@ -386,13 +367,10 @@ module.exports = (order, type) => {
             addDiscount -= (addDiscount * 2);
 
             totalPaymentGroup += discount.name + ': ' + Number(addDiscount).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) + "\n";
-
         })
     }
 
-
     if (order.taxes) {
-
         order.taxes.forEach((e) => {
             let addTax = 0;
 
@@ -402,7 +380,6 @@ module.exports = (order, type) => {
                 addTax = e.value;
             }
             totalPaymentGroup += e.name + ": " + Number(addTax).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) + "\n";
-
         });
     }
 

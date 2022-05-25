@@ -1,11 +1,30 @@
 {
   "name": "zap-desktop",
   "version": "1.0.0",
+  "productName": "Zap Desktop",
   "description": "Zap Desktop App",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "zap-desktop",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "uninstallDisplayName": "Zap Desktop - Desinstalar",
+      "license": "license.txt",
+      "allowToChangeInstallationDirectory": false
+    }
   },
   "repository": {
     "type": "git",
