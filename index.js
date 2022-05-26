@@ -3,20 +3,14 @@ const { setWindow } = require("./src/server");
 
 const useCleanCache = require("./src/hooks/useCleanCache");
 const getServerConfig = require("./src/utils/getServerConfig")
+const log = require("./src/utils/log");
 
-const { mkdirSync } = require("fs");
-
-mkdirSync('./config', { recursive: true });
-mkdirSync('./tmp', { recursive: true });
-
-app.commandLine.appendSwitch('ignore-certificate-errors')
-app.commandLine.appendSwitch('ignore-ssl-errors')
-app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+log("Start");
 
 function createWindow() {
 
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
+  
   loadWindow = new BrowserWindow({
     width: 250,
     height: 300,
@@ -32,11 +26,11 @@ function createWindow() {
   });
 
   loadWindow.loadFile("./src/view/loader/index.html");
-
+  
   loadWindow.once("ready-to-show", () => {
     loadWindow.show();
   });
-
+  
   mainWindow = new BrowserWindow({
     width: width,
     height: height,
@@ -49,10 +43,11 @@ function createWindow() {
     }
   });
 
+  log("Loading URL")
   mainWindow.loadURL("https://zapdelivery.me/minhaconta");
 
   Menu.setApplicationMenu(null);
-
+  
   setWindow.window = mainWindow;
 
   mainWindow.once("ready-to-show", () => {
@@ -64,10 +59,14 @@ function createWindow() {
   });
 }
 
+app.commandLine.appendSwitch('ignore-certificate-errors')
+app.commandLine.appendSwitch('ignore-ssl-errors')
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+
 app.whenReady().then(() => {
   useCleanCache();
   createWindow();
-
+  
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

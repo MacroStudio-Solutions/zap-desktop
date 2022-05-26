@@ -1,6 +1,9 @@
 const { BrowserWindow } = require("electron");
-const fs = require("fs");
+const { writeFileSync } = require("fs");
 const getTextReceipt = require("../../utils/getTextReceipt");
+
+const log = require("../../utils/log");
+const { getDir } = require("../../utils/rootDirs");
 
 exports.getPrinters = async (req, res) => {
     const printers = await req.window.webContents.getPrintersAsync();
@@ -8,11 +11,9 @@ exports.getPrinters = async (req, res) => {
 }
 
 exports.print = (req, res) => {
-
     const bodyContent = req.body;
 
     if (bodyContent) {
-
         const printWindow = new BrowserWindow({
             width: 500,
             height: 500,
@@ -20,16 +21,18 @@ exports.print = (req, res) => {
             show: false,
         })
 
-        let pathToOrder = `./tmp/print-order-${bodyContent.order.id}.`;
+        let pathToOrder = `${getDir("tmp")}/print-order-${bodyContent.order.id}.`;
 
         const orderPlainText = getTextReceipt(bodyContent.order, bodyContent.type);
 
+        log(`Writing temp receipt ${bodyContent.order.id}`)
+
         if (bodyContent.format == "text") {
             pathToOrder += "txt"
-            fs.writeFileSync(pathToOrder, orderPlainText, "utf8");
+            writeFileSync(pathToOrder, orderPlainText, "utf8");
         } else {
             pathToOrder += "html"
-            fs.writeFileSync(pathToOrder, `
+            writeFileSync(pathToOrder, `
             <!DOCTYPE html>
             <html lang="pt-br">
             <head>
@@ -57,14 +60,17 @@ exports.print = (req, res) => {
             `, "utf8");
         }
 
+        log(`Loading order ${bodyContent.order.id}`)
         printWindow.loadFile(pathToOrder);
 
         printWindow.webContents.on('did-finish-load', () => {
-
+           
+            log(`Printing order ${bodyContent.order.id}`)
             printWindow.webContents.print(bodyContent.options, (success, errorType) => {
                 if (success) {
                     res.status(200).send({ status: success })
                 } else {
+                    log(`Failed to print order ${bodyContent.order.id}`)
                     res.status(500).send({ status: success })
                 }
                 printWindow.close()

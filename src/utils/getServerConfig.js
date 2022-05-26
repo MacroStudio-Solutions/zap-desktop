@@ -1,11 +1,15 @@
 const ip = require("ip");
-const LOCAL_IP = ip.address();
+const https = require('https');
+
+const { server, setWindow } = require("../server");
 const getWindowKey = require("./getWindowKey")
 const useCheckServer = require("../hooks/useCheckServer");
 const useSetServer = require("../hooks/useSetServer");
-const { server, setWindow } = require("../server");
-const { readFileSync } = require("fs")
-const https = require('https')
+const { getCert } = require("../hooks/useCertificate")
+const log = require("../utils/log");
+
+const MS_RETRIES = 3000
+const LOCAL_IP = ip.address();
 
 const getServerConfig = (mainWindow) => {
 
@@ -17,32 +21,39 @@ const getServerConfig = (mainWindow) => {
                 setWindow.key = windowKey;
 
                 if (!await useCheckServer(result.port)) {
-                    const credentials = {
-                        key: readFileSync('./src/cert/key.pem', "utf8"),
-                        cert: readFileSync('./src/cert/cert.pem', "utf8")
-                    };
 
-                    https.createServer(credentials, server).listen(result.port, async () => {
-                        let newServerConfig = { ...result, windowKey: windowKey, ip: LOCAL_IP }
-                        useSetServer(newServerConfig);
+                    log("Creating server")
 
-                        mainWindow.webContents.executeJavaScript('window.isServer = true;', true)
-                            .then((result) => {
-                                console.log(`Window "${windowKey}" is the server`);
-                            })
-                            .catch((e) => {
-                                console.log("Failed to set server on web contents")
-                            });
+                    try {
+                        const credentials = getCert();
+                        https.createServer(credentials, server).listen(result.port, async () => {
+                            let newServerConfig = { ...result, windowKey: windowKey, ip: LOCAL_IP }
+                            useSetServer(newServerConfig);
 
-                        console.log(`Process listen in https://localhost:${result.port}`);
-                    });
+                            mainWindow.webContents.executeJavaScript('window.isServer = true;', true)
+                                .then((result) => {
+                                    console.log(`Window "${windowKey}" is the server`);
+                                    log(`Window "${windowKey}" is server`)
+                                })
+                                .catch((e) => {
+                                    console.log("Failed to set server on web contents")
+                                    log("Failed to set server on web contents")
+                                });
+
+                            console.log(`Server listen in https://${LOCAL_IP}:${result.port}`);
+                        });
+                    } catch (e) {
+                        log("Fail to create server")
+                    }
                 }
             } else {
-                setTimeout(() => { getServerConfig(mainWindow) }, 3000)
+                log("Getting local server info failed")
+                setTimeout(() => { getServerConfig(mainWindow) }, MS_RETRIES)
             }
         })
         .catch((e) => {
-            setTimeout(() => { getServerConfig(mainWindow) }, 3000)
+            log("Getting local server info failed")
+            setTimeout(() => { getServerConfig(mainWindow) }, MS_RETRIES)
         });
 }
 

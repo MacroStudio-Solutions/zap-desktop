@@ -22,7 +22,7 @@
       "installerIcon": "icon.ico",
       "uninstallerIcon": "icon.ico",
       "uninstallDisplayName": "Zap Desktop - Desinstalar",
-      "license": "license.txt",
+      "license": "license.html",
       "allowToChangeInstallationDirectory": false
     }
   },
@@ -38,10 +38,10 @@
   "homepage": "https://github.com/MacroStudio-Solutions/zap-desktop#readme",
   "devDependencies": {
     "electron": "^18.2.4",
-    "electron-builder": "^23.0.3",
-    "mkcert": "^1.5.0"
+    "electron-builder": "^23.0.3"
   },
   "dependencies": {
+    "mkcert": "^1.5.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "express": "^4.18.0",
