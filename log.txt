@@ -1,0 +1,16 @@
+Start
+Limpando a cache
+Criando janela
+Carregando URL
+Recuperando informação do servidor
+Executando javascript
+Falha ao executar javascript
+Executando javascript
+Falha ao executar javascript
+Executando javascript
+Resultado da checagem do localServer
+Recuperando chave da janela
+Checando servidor
+Iniciando servidor
+Postando servidor
+Setando isServer

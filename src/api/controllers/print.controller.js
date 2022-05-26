@@ -20,7 +20,7 @@ exports.print = (req, res) => {
             show: false,
         })
 
-        let pathToOrder = `src/tmp/print-order-${bodyContent.order.id}.`;
+        let pathToOrder = `./tmp/print-order-${bodyContent.order.id}.`;
 
         const orderPlainText = getTextReceipt(bodyContent.order, bodyContent.type);
 
