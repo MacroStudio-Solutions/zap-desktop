@@ -1,8 +1,10 @@
 const root = require("./root");
+const { mkdirSync } = require("fs")
 
-const DIR_PREFIX = "/dev/";
+const DIR_PREFIX = "/dev";
 
 const DIR_LIST = {
+    dev: "/dev",
     tmp: "/tmp",
     config: "/config",
     cert: "/config/cert",
@@ -17,7 +19,7 @@ const setDirs = () => {
 }
 
 const getDir = (dir) => {
-    return root + DIR_PREFIX + DIR_LIST[dir]; 
+    return root + DIR_PREFIX + DIR_LIST[dir];
 }
 
 module.exports = { setDirs, getDir }

@@ -1,10 +1,14 @@
 const { readFileSync, writeFileSync } = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const { getDir } = require("./rootDirs")
+const log = require("../utils/log");
 const ENCODE = "utf8";
 
 const getWindowId = (storeId) => {
-    const pathToFile = getDir("config") + `/${storeId}.key`;
+
+    log("Get window key - " + getDir("keys") + `/${storeId}.key`);
+
+    const pathToFile = getDir("keys") + `/${storeId}.key`;
 
     let exists = false;
     let windowKey = uuidv4();
@@ -14,6 +18,7 @@ const getWindowId = (storeId) => {
         exists = true;
     } catch (e) {
         exists = false;
+        log("Get window key failed");
     }
 
     if (!exists) writeFileSync(pathToFile, windowKey, ENCODE);

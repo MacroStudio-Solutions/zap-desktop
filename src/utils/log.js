@@ -3,6 +3,10 @@ const { writeFileSync, appendFileSync, existsSync } = require("fs");
 const ENCODE = "utf8";
 
 const log = (message) => {
+
+    // disable
+    return;
+
     const pathToLog = `${root}/log.txt`;
 
     const formatedDate = new Date().toLocaleString();

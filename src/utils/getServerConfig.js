@@ -46,13 +46,16 @@ const getServerConfig = (mainWindow) => {
                         log("Fail to create server")
                     }
                 }
+                
             } else {
-                log("Getting local server info failed")
+                log("Getting local server info result failed")
                 setTimeout(() => { getServerConfig(mainWindow) }, MS_RETRIES)
             }
         })
         .catch((e) => {
             log("Getting local server info failed")
+            log(`${e}`)
+
             setTimeout(() => { getServerConfig(mainWindow) }, MS_RETRIES)
         });
 }

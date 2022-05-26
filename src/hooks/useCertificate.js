@@ -7,9 +7,9 @@ const log = require("../utils/log")
 
 const KEY_PATH = getDir("cert") + "/key.pem";
 const CERT_PATH = getDir("cert") + "/cert.pem";
-const ENCODE = "utf8;"
+const ENCODE = "utf8";
 
-const createCertificate = () => {
+const createCertificate = async () => {
   if (existsSync(CERT_PATH)) return;
 
   const ca = await makeCert.createCA({

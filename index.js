@@ -4,13 +4,15 @@ const { setWindow } = require("./src/server");
 const useCleanCache = require("./src/hooks/useCleanCache");
 const getServerConfig = require("./src/utils/getServerConfig")
 const log = require("./src/utils/log");
+const { setDirs } = require("./src/utils/rootDirs");
 
 log("Start");
+setDirs();
 
 function createWindow() {
 
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  
+
   loadWindow = new BrowserWindow({
     width: 250,
     height: 300,
@@ -26,11 +28,11 @@ function createWindow() {
   });
 
   loadWindow.loadFile("./src/view/loader/index.html");
-  
+
   loadWindow.once("ready-to-show", () => {
     loadWindow.show();
   });
-  
+
   mainWindow = new BrowserWindow({
     width: width,
     height: height,
@@ -47,7 +49,7 @@ function createWindow() {
   mainWindow.loadURL("https://zapdelivery.me/minhaconta");
 
   Menu.setApplicationMenu(null);
-  
+
   setWindow.window = mainWindow;
 
   mainWindow.once("ready-to-show", () => {
@@ -66,7 +68,7 @@ app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
 app.whenReady().then(() => {
   useCleanCache();
   createWindow();
-  
+
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
